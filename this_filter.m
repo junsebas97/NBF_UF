@@ -72,10 +72,10 @@ f_k(2:end) = alpha_f*f_k(:, (2:end) - 1) + ...   % known force  [kN]
 lambda    = alpha^2*(nz + kappa) - nz;                       % [-] -- {1} Page 3
 Wm        = NaN(2*nz + 1, 1);
 Wc        = NaN(1, 2*nz + 1);
-Wm(1)     = lambda/(nz + lambda);                            % [-] -- {1} Eq.4
-Wc(1)     = (lambda/(nz + lambda)) + (1 - alpha^2 + beta);   % [-] -- {1} Eq.5
-Wm(2:end) = 1/(2*(nz + lambda));                             % [-] -- {1} Eq.6
-Wc(2:end) = 1/(2*(nz + lambda));                             % [-] -- {1} Eq.6
+Wm(1)     = lambda/(nz + lambda);                            % [-] -- {1} Eq.7
+Wc(1)     = (lambda/(nz + lambda)) + (1 - alpha^2 + beta);   % [-] -- {1} Eq.8
+Wm(2:end) = 1/(2*(nz + lambda));                             % [-] -- {1} Eq.9
+Wc(2:end) = 1/(2*(nz + lambda));                             % [-] -- {1} Eq.9
 
 %% FILTERING:
 % apply the filter to estimate the sytem state and the uncertain force
@@ -87,13 +87,13 @@ Pfu = NaN(nfu, nfu, Nt);       Pfu(:, :, 1) = Pfu_0;
 for i = 2:Nt
     % for each time step:
     % 1) predict the input
-    mfu_iim1 = mfu(:,    i - 1);        % mean       [kN]  -- {1} Eq.19
-    Pfu_iim1 = Pfu(:, :, i - 1) + E;    % covariance [kN2] -- {1} Eq.20
+    mfu_iim1 = mfu(:,    i - 1);        % mean       [kN]  -- {1} Eq.34
+    Pfu_iim1 = Pfu(:, :, i - 1) + E;    % covariance [kN2] -- {1} Eq.35
 
     % 2) predict the state and compute its covariances
     % 2.1) create the sigma points of the UT
-    mz      = [mx(:, i - 1); mfu_iim1];                        %      {1} Page 4
-    sqrt_Pz = sqrt(nz + lambda)*...                            % from {1} Page 4
+    mz      = [mx(:, i - 1); mfu_iim1];                         %      {1} Eq.20
+    sqrt_Pz = sqrt(nz + lambda)*...                             % from {1} Eq.21
               chol(blkdiag(Px(:, :, i - 1), Pfu_iim1), 'lower');
 
     Z                     = NaN(nz, 2*nz + 1);
@@ -103,7 +103,7 @@ for i = 2:Nt
 
     X = Z(      (1:nx), :);         % [m], [m/s], [m/s2], [m] -- {1} Page 4
     U = Z(nx + (1:nfu), :);         % [kN]                    -- {1} Page 4
-    F = S_fk*f_k(:, i) + S_fu*U;    % [kN]                    -- {1} Page 5
+    F = S_fk*f_k(:, i) + S_fu*U;    % [kN]                    -- {1} Page 4
 
     % 2.2) evaluate the current state by propagating the sigma points
     g_XF = NaN(nx, 2*nz + 1);
@@ -112,17 +112,17 @@ for i = 2:Nt
     end
 
     % 2.3) compute the statistics of the current state
-    mx_iim1 = g_XF*Wm;                        % mean       [m],     -- {1} Eq.20
+    mx_iim1 = g_XF*Wm;                        % mean       [m],     -- {1} Eq.36
                                               %            [m/s], 
                                               %            [m/s2],
                                               %            [m]
     g_dist  = g_XF - mx_iim1;
-    Px_iim1 = (Wc.*g_dist)*g_dist' + Q;       % covariance [m2],    -- {1} Eq.21
+    Px_iim1 = (Wc.*g_dist)*g_dist' + Q;       % covariance [m2],    -- {1} Eq.37
                                               %            [m2/s2],
                                               %            [m2/s4],
                                               %            [m2]
     
-    % 3) update the state and uncertain force -- {1} Eqs.23 to 31
+    % 3) update the state and uncertain force -- {1} Eqs.44 to 52
     my           = H*mx_iim1;                     % [m],    [m/s],    [m/s2]
     Py           = H*Px_iim1*H' + R;              % [m2],   [m2/s2],  [m2/s4]
     P_fux        = (Wc.*(U - mfu_iim1))*g_dist';  % [kN-m], [kN-m/s], [kN-m/s2], [kN-m]
@@ -191,7 +191,7 @@ xi_tim1 = x_im1(3*N_DOFs + (1:N_DOFs));    % BW displacements  [m]
 
 % assess the previous restoring force
 r_tim1 = alpha_BW.*k.*diff([0; u_tim1]) + ...    % springs force [kN] 
-         (1 - alpha_BW).*k.*xi_tim1;             % -- {1} Page 8
+         (1 - alpha_BW).*k.*xi_tim1;             % -- {1} Eq.54
 r_tim1 = r_tim1 - [r_tim1(2:end); 0];            % DOFs force    [kN]
 
 % initalize the displacements and velocities

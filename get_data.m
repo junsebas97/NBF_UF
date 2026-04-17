@@ -52,9 +52,9 @@ a0  = x0((2*N_DOFs + 1):3*N_DOFs);    % acceleration    [m/s2]
 xi0 = x0((3*N_DOFs + 1):     end);    % BW displacement [m]
 
 % assess the initial restoring forces
-r0 = alpha_BW.*k.*diff([0; u0]) + ...    % spring force [kN] -- {1} Page 8
+r0 = alpha_BW.*k.*diff([0; u0]) + ...    % spring force [kN] -- {1} Eq.54
      (1 - alpha_BW).*k.*xi0;
-r0 = r0 - [r0(2:end);  0];             % DOFs force   [kN]
+r0 = r0 - [r0(2:end);  0];               % DOFs force   [kN]
 
 %% TIME-INTEGRATION:
 % assign the initial conditions
@@ -122,7 +122,7 @@ end
 %% DATA CREATION:
 % define the state and get the measurements
 x = [u; v; a; xi];    % state        [m], [m/s], [m/s2], [m] -- {1} Page 3
-y = H*x;              % measurements [m], [m/s], [m/s2]      -- {1} Page 3
+y = H*x;              % measurements [m], [m/s], [m/s2]      -- {1} Eq.11
 
 % add noise to the measurements
 noise_mean = zeros(Ny, 1);                              % [m],  [m/s],   [m/s2]

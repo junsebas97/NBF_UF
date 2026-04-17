@@ -65,10 +65,10 @@ N = size(mx_0, 1);    % number of state components
 lambda    = phi^2*(N + gamma) - N;                         % [-] -- {1} Page 122
 Wm        = NaN(2*N + 1, 1);
 Wc        = NaN(1, 2*N + 1);
-Wm(1)     = lambda/(N + lambda);                           % [-] -- {2} Eq.4
-Wc(1)     = (lambda/(N + lambda)) + (1 - phi^2 + beta);    % [-] -- {2} Eq.5
-Wm(2:end) = 1/(2*(N + lambda));                            % [-] -- {2} Eq.6
-Wc(2:end) = 1/(2*(N + lambda));                            % [-] -- {2} Eq.6
+Wm(1)     = lambda/(N + lambda);                           % [-] -- {2} Eq.7
+Wc(1)     = (lambda/(N + lambda)) + (1 - phi^2 + beta);    % [-] -- {2} Eq.8
+Wm(2:end) = 1/(2*(N + lambda));                            % [-] -- {2} Eq.9
+Wc(2:end) = 1/(2*(N + lambda));                            % [-] -- {2} Eq.9
 
 % define the parameters of the models
 dt      = t(2) - t(1);    % time step [s]
@@ -201,9 +201,8 @@ xi      = x((2*N_DOFs + 1):       end);    % BW displacements [m]
 vi_vim1 = diff([0; v]);                    % velocity drifts  [m/s]
 
 % evaluate the restoring force
-F = alpha.*k.*diff([0; u]) + ...    % spring force [kN] -- {2} Page 8
-    (1 - alpha).*k.*xi;
-F = F - [F(2:end); 0];              % DOFs force   [kN]
+F = alpha.*k.*diff([0; u]) + (1 - alpha).*k.*xi;    % spring's [kN] -- {2} Eq.54
+F = F - [F(2:end); 0];                              % DOFs's   [kN]
 
 % compute the dynamics -- {1} Eqs.2 and 31
 xdot = [v;                                                              % [m/s]
@@ -270,9 +269,8 @@ v       = x((  N_DOFs + 1):(2*N_DOFs));    % velocities       [m/s]
 xi      = x((2*N_DOFs + 1):       end);    % BW displacements [m]
 
 % evaluate the restoring force
-F = alpha.*k.*diff([0; u]) + ...    % spring force [kN] -- {2} Page 8
-    (1 - alpha).*k.*xi;
-F = F - [F(2:end); 0];              % DOFs force   [kN]
+F = alpha.*k.*diff([0; u]) + (1 - alpha).*k.*xi;    % spring's [kN] -- {2} Eq.54
+F = F - [F(2:end); 0];                              % DOFs'    [kN]
 
 % compute the measuremenets
 y = [Su*u;                         % [m],

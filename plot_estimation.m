@@ -22,7 +22,7 @@ Nx_DOF   = Nx/N_DOFs;           % state components per DOF
 % get the standard deviations of the estimation
 x_sd = NaN(Nx, Nt);
 for i = 1:Nt
-    x_sd(:, i) = sqrt(diag(Px(:, :, i)));    % [m], [m/s], [m/s2], [m] or [m/s2]
+    x_sd(:, i) = sqrt(diag(Px(:, :, i)));    % [m], [m/s], [m/s2], [m] or [kN]
 end
 
 % create UI figure and set its layout

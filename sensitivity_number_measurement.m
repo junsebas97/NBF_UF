@@ -94,7 +94,7 @@ theta = {[]; f_k; S_fk; S_fu; M; C; k; alphaBW_fltr; beta_BW;       % system
 
 %% MAIN:
 % define the force of the system
-f_data = S_fk*f_k + S_fu*f_u;    % [kN] -- Page 4
+f_data = S_fk*f_k + S_fu*f_u;    % [kN] -- Eq.13
 
 % perform the filtering
 N_analy = numel(Su);
@@ -113,10 +113,10 @@ for i = 1:N_analy
     N_Sa = size(Sa{i}, 1);        % number acceleration measurements
     Ny   = N_Su + N_Sv + N_Sa;    % total number of measurements
     
-    H                                                = zeros(Ny, nx);   % Page 4
-    H(              (1:N_Su),            (1:N_DOFs)) = Su{i};           % [-]
-    H(       N_Su + (1:N_Sv),   N_DOFs + (1:N_DOFs)) = Sv{i};           % [-]
-    H(N_Su + N_Sv + (1:N_Sa), 2*N_DOFs + (1:N_DOFs)) = Sa{i};           % [-]
+    H                                                = zeros(Ny, nx); % -- Eq.12
+    H(              (1:N_Su),            (1:N_DOFs)) = Su{i};         % [-]
+    H(       N_Su + (1:N_Sv),   N_DOFs + (1:N_DOFs)) = Sv{i};         % [-]
+    H(N_Su + N_Sv + (1:N_Sa), 2*N_DOFs + (1:N_DOFs)) = Sa{i};         % [-]
 
     theta{1} = H;
 

@@ -28,7 +28,7 @@ BIBLIOGRAPHY: {1} A nonlinear Bayesian filter for structural systems with
 N_DOFs = size(alpha, 1);    % number of DOFs
 dv     = v_i - v_im1;       % velocity change [m/s2]
 
-% define the dynamic model -- {1} Page 8
+% define the dynamic model -- {1} Eq.55
 g = @(xi, v) diff([0; v]).* ...                                          % [m/s]
              (1 - (abs(xi).^n).*(beta.*sign(xi.*diff([0; v])) + gamma));
 
@@ -41,14 +41,14 @@ k4   = g(xi_im1 +       k3*dt, v_im1 +       dv);    % [m/s] -- {2} Eqs.25.40d
 xi_i = xi_im1 + (1/6)*(k1 + 2*k2 + 2*k3 + k4)*dt;    % [m]   -- {2} Eq.25.40
 
 % compute the restoring forces
-r_i = alpha.*k.*diff([0; u_i]) + ...    % spring forces [kN] -- {1} Page 8
+r_i = alpha.*k.*diff([0; u_i]) + ...    % spring forces [kN] -- {1} Eq.54
       (1 - alpha).*k.*xi_i;
 r_i = r_i - [r_i(2:end); 0];            % DOFs forces   [kN]
 
 % calculate the tangent stiffness matrix of the Bouc-Wen elements
 dxi_du = 1 - (abs(xi_i).^n).*...                            % tangent of BW
              (beta.*sign(xi_i.*diff([0; v_i])) + gamma);    % displacement [-]
-                                                            % from -- {1} Page 8
+                                                            % from -- {1} Eq.55
 
 kT_BW = alpha.*k + (1 - alpha).*k.*dxi_du;                  % tangent elemental
                                                             % stiffness [kN/m]

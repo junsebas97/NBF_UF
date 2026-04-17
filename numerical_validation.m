@@ -78,7 +78,7 @@ Ny     = N_Su + N_Sv + N_Sa;    % total number of measurements
 dt     = t(2) - t(1);           % time step [s]
 
 % get the measurement matrix
-H                                                = zeros(Ny, nx);    % -- Page 4
+H                                                = zeros(Ny, nx);    % -- Eq.12
 H(              (1:N_Su),            (1:N_DOFs)) = Su;               % [-]
 H(       N_Su + (1:N_Sv),   N_DOFs + (1:N_DOFs)) = Sv;               % [-]
 H(N_Su + N_Sv + (1:N_Sa), 2*N_DOFs + (1:N_DOFs)) = Sa;               % [-]
@@ -98,7 +98,7 @@ theta = {H; f_k; S_fk; S_fu; M; C; k; alphaBW_fltr; beta_BW; gamma_BW;
 
 %% MAIN:
 % create target data (measurements and states)
-f_data = S_fk*f_k + S_fu*f_u;     % [kN] -- Page 4
+f_data = S_fk*f_k + S_fu*f_u;     % [kN] -- Eq.13
 
 [x, y] = get_data(x0, f_data, M, C, k, alpha_BW, beta_BW, gamma_BW, ...
                   n_BW, rho_infty, dt, tolerance, max_iter, H, noise_ratio);
