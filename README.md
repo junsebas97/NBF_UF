@@ -1,4 +1,4 @@
-# Nonlinear Bayesian filter with uncertain forces
+# Nonlinear Bayesian filter with uncertain loads
 
 This repository implements the Nonlinear Bayesian filter for structural dynamics with uncertain forces [CITE PENDING]. This filter estimates states and uncertain forces using Gaussian random walks, the unscented transform, and single-step time-integration algorithms.
 
